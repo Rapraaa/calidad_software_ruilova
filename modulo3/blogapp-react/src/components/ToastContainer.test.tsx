@@ -9,8 +9,8 @@ beforeEach(() => {
 
 describe('ToastContainer', () => {
   it('should render nothing when there is no message', () => {
-    render(<ToastContainer />)
-    expect(screen.queryByRole('generic')).not.toBeInTheDocument()
+    const { container } = render(<ToastContainer />)
+    expect(container).toBeEmptyDOMElement()
   })
 
   it('should show the message from the toast store', () => {

@@ -12,10 +12,14 @@ vi.mock('@/api/categories.api', () => ({
   getCategories: vi.fn(),
 }))
 
+// Radix Select no funciona de forma fiable en jsdom (Pointer Events + portales).
+// Lo reemplazamos por un stub determinista que conserva los roles ARIA.
+vi.mock('@/components/ui/select', () => import('@/test/mocks/ui-select'))
+
 import { createPost, updatePost } from '@/api/posts.api'
 import { getCategories } from '@/api/categories.api'
 
-const CATEGORY_ID = '11111111-1111-1111-1111-111111111111'
+const CATEGORY_ID = '11111111-1111-4111-8111-111111111111'
 const onOpenChange = vi.fn()
 const onSaved = vi.fn()
 
@@ -29,7 +33,7 @@ beforeEach(() => {
 
 describe('PostFormDialog — creación', () => {
   it('should call createPost with the typed fields and the selected category', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     vi.mocked(createPost).mockResolvedValue({
       id: 'post-1',
       title: 'Nuevo post',
@@ -57,7 +61,7 @@ describe('PostFormDialog — creación', () => {
   })
 
   it('should show a validation error when no category is selected', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     render(<PostFormDialog open onOpenChange={onOpenChange} post={null} onSaved={onSaved} />)
 
     await user.type(screen.getByLabelText('Título'), 'Nuevo post')
@@ -86,7 +90,7 @@ describe('PostFormDialog — edición', () => {
   })
 
   it('should call updatePost with the post id, keeping the existing category', async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
     vi.mocked(updatePost).mockResolvedValue({ ...post, title: 'Post editado' })
 
     render(<PostFormDialog open onOpenChange={onOpenChange} post={post} onSaved={onSaved} />)

@@ -1,12 +1,17 @@
 // src/pages/private/PostsPage.test.tsx
 import { http, HttpResponse } from 'msw'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { server } from '@/test/mocks/server'
+import { renderWithRouter } from '@/test/render'
 import PostsPage from './PostsPage'
 
+// Radix Select no funciona de forma fiable en jsdom (Pointer Events + portales).
+// Lo reemplazamos por un stub determinista que conserva los roles ARIA.
+vi.mock('@/components/ui/select', () => import('@/test/mocks/ui-select'))
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL
-const CATEGORY = { id: '11111111-1111-1111-1111-111111111111', name: 'Tech' }
+const CATEGORY = { id: '11111111-1111-4111-8111-111111111111', name: 'Tech' }
 
 it('should list, create, edit and delete a post end to end', async () => {
   let posts = [{ id: 'post-1', title: 'Primer post', content: 'Contenido', category: CATEGORY }]
@@ -43,8 +48,8 @@ it('should list, create, edit and delete a post end to end', async () => {
     }),
   )
 
-  const user = userEvent.setup()
-  render(<PostsPage />)
+  const user = userEvent.setup({ pointerEventsCheck: 0 })
+  renderWithRouter(<PostsPage />)
 
   // 1. Listado inicial
   expect(await screen.findByText('Primer post')).toBeInTheDocument()

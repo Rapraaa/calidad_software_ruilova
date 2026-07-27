@@ -82,7 +82,7 @@ export default function CourseFormDialog({ open, onOpenChange, course, onSaved }
         <DialogHeader>
           <DialogTitle>{course ? 'Editar curso' : 'Nuevo curso'}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3" noValidate>
           <div>
             <Label htmlFor="nombre">Nombre</Label>
             <Input id="nombre" {...register('nombre')} />

@@ -56,7 +56,7 @@ export default function PostFormDialog({ open, onOpenChange, post, onSaved }: Pr
         <DialogHeader>
           <DialogTitle>{post ? 'Editar post' : 'Nuevo post'}</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3" noValidate>
           <div>
             <Label htmlFor="title">Título</Label>
             <Input id="title" {...register('title')} />
@@ -74,7 +74,7 @@ export default function PostFormDialog({ open, onOpenChange, post, onSaved }: Pr
               control={control}
               render={({ field }) => (
                 <Select onValueChange={field.onChange} value={field.value}>
-                  <SelectTrigger><SelectValue placeholder="Selecciona una categoría" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder="Elige una categoría" /></SelectTrigger>
                   <SelectContent>
                     {categories.map((cat) => (
                       <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
